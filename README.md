@@ -37,4 +37,17 @@ This is a command-line tool.
     python F:/dxtools/dx7sheet/dx7sheet.py Soundplantage.syx
 <img width="504" height="857" alt="DX7sheet" src="https://github.com/user-attachments/assets/948f35f1-2fc5-4dbb-bbf8-e139ac2308be" />
 
+LICENCE:
+DX7 Voice Data Sheet Generator (dx7sheet.py)
+Copyright (c) 2025 Peter Berghoff / Soundplantage
 
+All rights reserved.
+
+This software is provided for private and personal use only.
+You may use, modify, and study this code for your own projects,
+but you may not distribute, share, sell, or publish it — in whole
+or in part — without explicit written permission from the author.
+
+This tool is part of the Soundplantage project ecosystem.
+
+Use at your own risk.
