@@ -36,7 +36,8 @@ This is a command-line tool.
     ```bash
     python F:/dxtools/dx7sheet/dx7sheet.py Soundplantage.syx
 
-## Example of an exported DX7 Voice Data Sheet:
+
+Example of an exported DX7 Voice Data Sheet:
 ============================================================
                     DX7 VOICE DATA SHEET                    
 ============================================================
