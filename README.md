@@ -38,6 +38,7 @@ This is a command-line tool.
 <img width="504" height="857" alt="DX7sheet" src="https://github.com/user-attachments/assets/948f35f1-2fc5-4dbb-bbf8-e139ac2308be" />
 
 LICENCE:
+
 DX7 Voice Data Sheet Generator (dx7sheet.py)
 Copyright (c) 2025 Peter Berghoff / Soundplantage
 
