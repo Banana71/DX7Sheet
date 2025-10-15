@@ -5,7 +5,7 @@ import os
 import re
 import math
 
-# --- Konstanten und Mapping-Tabellen ---
+# --- Constants and Mapping Tables ---
 
 NOTE_NAMES = ['A-1', 'A#-1', 'B-1', 'C0', 'C#0', 'D0', 'D#0', 'E0', 'F0', 'F#0', 'G0', 'G#0', 'A0', 'A#0', 'B0', 'C1', 'C#1', 'D1', 'D#1', 'E1', 'F1', 'F#1', 'G1', 'G#1', 'A1', 'A#1', 'B1', 'C2', 'C#2', 'D2', 'D#2', 'E2', 'F2', 'F#2', 'G2', 'G#2', 'A2', 'A#2', 'B2', 'C3', 'C#3', 'D3', 'D#4', 'E4', 'F4', 'F#4', 'G4', 'G#4', 'A4', 'A#4', 'B4', 'C5', 'C#5', 'D5', 'D#5', 'E5', 'F5', 'F#5', 'G5', 'G#5', 'A5', 'A#5', 'B5', 'C6', 'C#6', 'D6', 'D#6', 'E6', 'F6', 'F#6', 'G6', 'G#6', 'A6', 'A#6', 'B6', 'C7', 'C#7', 'D7', 'D#7', 'E7', 'F7', 'F#7', 'G7', 'G#7', 'A7', 'A#7', 'B7', 'C8']
 CURVE_MODES = {0: '-LIN', 1: '-EXP', 2: '+EXP', 3: '+LIN'}
@@ -16,8 +16,8 @@ SYSEX_SIZE = 4104
 
 def parse_single_voice(data):
     """
-    Parst die 128 Bytes eines einzelnen Voice-Patches basierend auf der
-    exakten Bit-Maskierung aus der Dokumentation und der finalen Korrektur.
+    Parses the 128 bytes of a single voice patch based on the exact
+    bit-masking from the user-provided documentation.
     """
     params = {'ops': []}
 
@@ -33,22 +33,18 @@ def parse_single_voice(data):
         op['l_curve'] = CURVE_MODES[op_data[11] & 3]
         op['r_curve'] = CURVE_MODES[(op_data[11] >> 2) & 3]
 
-        # ================================================================= #
-        # Korrigiert von Soundplantage
+        # Corrected by Soundplantage for their specific SysEx format
         op['rate_scale'] = op_data[12] & 0x07
         op['tune'] = ((op_data[12] & 120) >> 3) - 7
-        # ================================================================= #
-
-        # Byte o+13: Key Velocity Sens (KVS) & Amp Mod Sens (AMS)
+        
+        # Correct logic for KVS and AMS from "Seite B" documentation
         op['key_vel'] = (op_data[13] >> 2) & 0x07
         op['amp_mod_sens'] = op_data[13] & 0x03
-
+        
         op['level'] = op_data[14]
 
-        # Byte o+15: OSC Mode (M) & Freq Coarse (FC)
         op['osc_mode'] = 'FIX' if op_data[15] & 1 else 'RATIO'
         coarse_byte = op_data[15] >> 1
-        
         op['fine_raw'] = op_data[16]
         
         if op['osc_mode'] == 'RATIO':
@@ -60,22 +56,33 @@ def parse_single_voice(data):
         
     params['ops'].reverse()
 
-    # Globale Parameter
+    # --- Global Parameters ---
     pitch_eg_data = data[102:110]
     params['pitch_eg_rate'] = list(pitch_eg_data[0:4])
     params['pitch_eg_level'] = list(pitch_eg_data[4:8])
+
     params['algorithm'] = (data[110] & 0x1F) + 1
     params['feedback'] = (data[110] >> 5) & 0x07
+
     params['osc_sync'] = 'ON' if data[111] & 8 else 'OFF'
+
     params['lfo_speed'] = data[112]
     params['lfo_delay'] = data[113]
     params['lfo_pmd'] = data[114]
     params['lfo_amd'] = data[115]
-    params['lfo_sync'] = 'ON' if data[116] & 1 else 'OFF'
-    params['lfo_wave'] = LFO_WAVES[(data[116] >> 1) & 7]
-    params['p_mod_sens'] = data[117] & 7
-    params['name'] = data[118:128].decode('ascii', errors='ignore').strip()
+
+    # ================================================================= #
+    # <<< FINAL CORRECTION for BYTE 116 BASED ON "SEITE B" >>>
+    # Mask: ((LPMS&7)<<4)|((LFW&7)<<1)|(LKS&1)
+    params['lfo_sync'] = 'ON' if (data[116] & 0x01) else 'OFF'
+    params['lfo_wave'] = LFO_WAVES[(data[116] >> 1) & 0x07]
+    params['p_mod_sens'] = (data[116] >> 4) & 0x07
+    # ================================================================= #
+
+    # Byte 117 is Transpose, which we display as a default value
     params['transpose'] = "C3"
+    
+    params['name'] = data[118:128].decode('ascii', errors='ignore').strip()
     
     return params
 
@@ -211,7 +218,6 @@ def main():
     
     datasheet = generate_datasheet(parsed_params, os.path.basename(filepath), choice)
     
-    # KORREKTUR: Der NameError wurde behoben.
     filename = sanitize_filename(parsed_params['name']) + ".txt"
     try:
         with open(filename, 'w', encoding='utf-8') as f:
