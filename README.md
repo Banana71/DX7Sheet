@@ -38,6 +38,25 @@ This is a command-line tool.
     
 <img width="518" height="873" alt="DX7sheet" src="https://github.com/user-attachments/assets/a11218b9-3a97-4f71-850b-ca10f758e1a6" />
 
+---
+## The Motivation Behind the Script
+
+Many online communities for synthesizer enthusiasts, like subreddits, are fantastic places to share knowledge and sounds. However, a common frustration is that most of these platforms don't allow users to upload files like .syx or .zip directly in their replies. This makes it difficult to share a DX7 patch with someone who is asking for a specific sound.
+
+I wanted a simple, universal solution to this problem. The goal was to find a pure text-based method to share patches that bypasses file upload restrictions entirely.
+
+This script is the result. It converts a binary SysEx file into a clean, human-readable text data sheet. This format is perfect for online forums because:
+
+It's just text. You can copy and paste the entire data sheet directly into a Reddit comment or any other text field.
+
+It's safe and accessible. No one has to download a file, which removes security concerns and extra steps like unzipping.
+
+It's universal. Anyone can read the parameters and manually enter them into their hardware DX7 or a software VST like Dexed to perfectly replicate the sound.
+
+This project was created to provide a simple and effective tool for the DX7 community to easily share patches without barriers.
+
+---
+
 LICENCE:
 
 DX7 Voice Data Sheet Generator (dx7sheet.py)
