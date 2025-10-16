@@ -33,11 +33,11 @@ def parse_single_voice(data):
         op['l_curve'] = CURVE_MODES[op_data[11] & 3]
         op['r_curve'] = CURVE_MODES[(op_data[11] >> 2) & 3]
 
-        # Korrigiert von Soundplantage
+        # RATE SCALE & TUNE
         op['rate_scale'] = op_data[12] & 0x07
         op['tune'] = ((op_data[12] & 120) >> 3) - 7
         
-        # Korrekte Logik für KVS und AMS aus "Seite B" Dokumentation
+        # KeyVel & AMP MOD SENS
         op['key_vel'] = (op_data[13] >> 2) & 0x07
         op['amp_mod_sens'] = op_data[13] & 0x03
         
@@ -190,12 +190,27 @@ def main():
     voices = [voice_bulk_data[i:i+128] for i in range(0, 4096, 128)]
     voice_names = [v[118:128].decode('ascii', errors='ignore').strip() for v in voices]
     
+# Neuer, verbesserter Block für die Zwei-Spalten-Anzeige
     print("--- DX7 Voice Data Sheet Generator ---")
     print(f"Bank '{os.path.basename(filepath)}' geladen. 32 Voices gefunden.")
-    print("-" * 36)
-    for i, name in enumerate(voice_names, 1):
-        print(f"  {i:02d}: {name}")
-    print("-" * 36)
+    print("-" * 50)  # Die Trennlinie etwas verbreitern
+
+    # In Zweierschritten durch die Liste der Voice-Namen gehen
+    for i in range(0, 32, 2):
+        # Linke Spalte (z.B. Voice 1, 3, 5, ...)
+        name1 = voice_names[i]
+        num1 = i + 1
+        left_column = f"  {num1:02d}: {name1:<10}" # Name auf 10 Zeichen auffüllen
+
+        # Rechte Spalte (z.B. Voice 2, 4, 6, ...)
+        name2 = voice_names[i+1]
+        num2 = i + 2
+        right_column = f"{num2:02d}: {name2:<10}" # Name auf 10 Zeichen auffüllen
+
+        # Beide Spalten in einer Zeile ausgeben
+        print(f"{left_column}    {right_column}")
+
+    print("-" * 50)
         
     choice = -1
     while not (1 <= choice <= 32):
