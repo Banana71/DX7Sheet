@@ -35,7 +35,8 @@ This is a command-line tool.
     **Example:**
     ```bash
     python F:/dxtools/dx7sheet/dx7sheet.py Soundplantage.syx
-<img width="524" height="884" alt="DX7sheet" src="https://github.com/user-attachments/assets/d2809131-16eb-44cd-8fdb-6a1dd92e79fd" />
+    
+<img width="518" height="873" alt="DX7sheet" src="https://github.com/user-attachments/assets/a11218b9-3a97-4f71-850b-ca10f758e1a6" />
 
 LICENCE:
 
