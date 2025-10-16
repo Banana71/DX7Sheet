@@ -47,7 +47,7 @@ All rights reserved.
 
 This software is provided for private and personal use only.
 You may use, modify, and study this code for your own projects,
-but you may not distribute, share, sell, or publish it — in whole
+but you may not sell, or publish it — in whole
 or in part — without explicit written permission from the author.
 
 This tool is part of the Soundplantage project ecosystem.
